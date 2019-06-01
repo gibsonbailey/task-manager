@@ -1,0 +1,20 @@
+<gantt>
+    <h1>Gantt</h1>
+    <div>
+        <canvas></canvas>
+    </div>
+    <script>
+        opt.usersCallBack(this)
+
+        this.on('mount', function() {
+            console.log('gantt mounted.')
+        })
+
+        this.on('users_loaded', function(user_data) {
+            console.log('user_data loaded.')
+        })
+    </script>
+    <style>
+
+    </style>
+</gantt>
