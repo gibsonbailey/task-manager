@@ -17,7 +17,7 @@
                 <div each={person in opts.people} class="gantt-user-container">
                     <div class="gantt-user-list">
                         <div class="gantt-user-header center-content">
-                            <p>{person.username}</p>
+                            <h4>{person.username}</h4>
                         </div>
                         <div class="gantt-user-list-tasks">
                             <div each={task in person.tasks} class="gantt-user-list-task task center-content">
@@ -47,11 +47,6 @@
         </div>
     </div>
     <script>
-        //'rgba(141, 153, 174, 1);',
-        //'rgba(24, 44, 65, 1);',
-        //'rgba(234, 222, 218, 1);',
-        //'rgba(191, 184, 173, 1);',
-        //'rgba(130, 51, 41, 1);',
 
         var color_palette = [
             {
@@ -155,12 +150,20 @@
             scroll_fix.scroll( function() {
                 scroll_fix.scrollLeft( $(this).scrollLeft())
             })
+
+            var w_container = $('.gantt-task-schedule').width()
+            var w_day_cell = $('.gantt-schedule-task-area-cell').outerWidth()
+            var days = dateDiffInDays(minimum_date, maximum_date) + 1
+            var days_on_screen = w_container / w_day_cell
+            console.log(w_container)
+            console.log(w_day_cell)
+            console.log(days)
+            console.log(days_on_screen)
         })
 
-        $(document).ready(function() {
-            $(document).on("scroll", ".scroll-fix", function(event){
-                $('.scroll-fix')
-            });
+
+        $(document).on("scroll", ".scroll-fix", function(event){
+            $('.scroll-fix')
         });
     </script>
     <style>
@@ -243,8 +246,6 @@
 
         .task-bar {
             position: absolute;
-//            background: rgba(255,0,0,0.03);
-//            border: solid 2px #f00;
             border-radius: 5px;
             height: 22px;
             margin-top: 4px;
@@ -274,7 +275,7 @@
             display: flex;
             flex-direction: row;
             width: 100%;
-            height: 100%;
+            height: 30px;
         }
 
         .gantt-schedule-task-area-cell {
@@ -295,9 +296,15 @@
             justify-content: center;
         }
 
+        h4 {
+            text-align: center;
+            min-width: 120px;
+            margin: 0;
+        }
+
         p {
             text-align: center;
-            width: 120px;
+            min-width: 120px;
             margin: 0;
         }
 
