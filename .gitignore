@@ -1,3 +1,5 @@
 task_viewer/static/js/tags/node_modules/
+task_viewer/static/js/tags/node_modules/*
+task_viewer/node_modules/
 .idea/
 *.pyc

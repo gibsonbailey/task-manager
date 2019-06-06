@@ -1,10 +1,120 @@
 <gantt>
-    <h1>Gantt</h1>
-    <div>
-        <canvas></canvas>
+    <div class="gantt-chart-container">
+        <div class="gantt-chart-content">
+            <div class="gantt-chart-header">
+                <div class="gantt-chart-header-title center-content">
+                    <p>Developers</p>
+                </div>
+                <div class="gantt-chart-header-schedule">
+                    <div class="gantt-chart-header-schedule-list scroll-fix">
+                        <div each={date in opts.layout_dates} class="gantt-chart-header-schedule-date center-content">
+                            <p>{date.str}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gantt-users-container">
+                <div each={person in opts.people} class="gantt-user-container">
+                    <div class="gantt-user-list">
+                        <div class="gantt-user-header center-content">
+                            <p>{person.username}</p>
+                        </div>
+                        <div class="gantt-user-list-tasks">
+                            <div each={task in person.tasks} class="gantt-user-list-task task center-content">
+                                <p>{task.title}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gantt-user-schedule">
+                        <div class="gantt-user-header center-content">
+                            <div class="gantt-task-schedule">
+                                <div each={task, i in person.tasks} style="margin-top: 15px; margin-left: {task.date_offset * 0.1}px; width: {task.date_duration * 0.1}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="gantt-task-schedule-container scroll-fix">
+                            <div each={task, i in person.tasks} class="gantt-task-schedule">
+                                <div each={date in opts.layout_dates} class="gantt-schedule-task-area-cell task center-content">
+                                    <p></p>
+                                </div>
+                                <div  style="margin-left: {task.date_offset}px; width: {task.date_duration}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
-        opt.usersCallBack(this)
+        //'rgba(141, 153, 174, 1);',
+        //'rgba(24, 44, 65, 1);',
+        //'rgba(234, 222, 218, 1);',
+        //'rgba(191, 184, 173, 1);',
+        //'rgba(130, 51, 41, 1);',
+
+        var color_palette = [
+            {
+                border: 'rgba(141, 153, 174, 0.8);',
+                background: 'rgba(141, 153, 174, 0.18);',
+            },
+            {
+                border: 'rgba(24, 44, 65, 0.8);',
+                background: 'rgba(24, 44, 65, 0.18);',
+            },
+            {
+                border: 'rgba(130, 51, 41, 0.8);',
+                background: 'rgba(130, 51, 41, 0.18);',
+            },
+            {
+                border: 'rgba(234, 222, 218, 0.8);',
+                background: 'rgba(234, 222, 218, 0.18);',
+            },
+            {
+                border: 'rgba(191, 184, 173, 0.8);',
+                background: 'rgba(191, 184, 173, 0.18);',
+            },
+        ];
+
+
+        function dateDiffInDays(a, b) {
+            const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+            // Discard the time and time-zone information.
+            const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+            const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+            return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+        }
+
+
+        function min_and_max_date(users) {
+            let min = new Date(2200, 11, 25);
+            let max = null;
+            for(let i = 0; i < users.length; i++) {
+                let tasks = users[i].tasks
+                for(let j = 0; j < tasks.length; j++) {
+                    let ts = new Date(tasks[j].start_date)
+                    let te = new Date(tasks[j].end_date)
+
+                    if(te > max) {
+                        max = te;
+                    }
+                    if(ts < min) {
+                        min = ts;
+                    }
+                }
+            }
+            console.log(['max', max])
+            return {
+                min: min,
+                max: max
+            }
+        };
+
+
+
+        opts.usersCallBack(this)
 
         this.on('mount', function() {
             console.log('gantt mounted.')
@@ -12,9 +122,184 @@
 
         this.on('users_loaded', function(user_data) {
             console.log('user_data loaded.')
+
+            function assign_date_formats(minimum_date) {
+                for(let i = 0; i < user_data.length; i++) {
+                    for(let j = 0; j < user_data[i].tasks.length; j++) {
+                        user_data[i].tasks[j].date_offset = (1 + dateDiffInDays(minimum_date, new Date(user_data[i].tasks[j].start_date))) * 122
+                        user_data[i].tasks[j].date_duration = (1 + dateDiffInDays(new Date(user_data[i].tasks[j].start_date), new Date(user_data[i].tasks[j].end_date))) * 122
+                    }
+                }
+            }
+
+            const minimum_date = min_and_max_date(user_data).min
+            const maximum_date = min_and_max_date(user_data).max
+            assign_date_formats(minimum_date)
+
+            var layout_dates = []
+            for(let i = 0; i < dateDiffInDays(minimum_date, maximum_date) + 2; i++) {
+                let d = new Date(minimum_date.getTime())
+                d.setDate(minimum_date.getDate() + i)
+                layout_dates.push({
+                    str: d.toString().slice(3,10),
+                })
+            }
+            opts.layout_dates = layout_dates
+            opts.people = user_data
+            opts.color_palette = color_palette
+            console.log(user_data)
+            this.update()
+
+            var scroll_fix = $('.scroll-fix')
+
+            scroll_fix.scroll( function() {
+                scroll_fix.scrollLeft( $(this).scrollLeft())
+            })
         })
+
+        $(document).ready(function() {
+            $(document).on("scroll", ".scroll-fix", function(event){
+                $('.scroll-fix')
+            });
+        });
     </script>
     <style>
+        .gantt-chart-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gantt-chart-content {
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+            height: 95%;
+            background: #ddd;
+            border-radius: 8px;
+        }
+
+        .gantt-chart-header {
+            display: flex;
+            width: 100%;
+            height: 80px;
+        }
+
+        .gantt-chart-header-title {
+            display: flex;
+            width: 25%;
+            align-items: center;
+        }
+
+        .gantt-chart-header-schedule {
+            display: flex;
+            width: 75%;
+        }
+
+        .gantt-chart-header-schedule-list {
+            display: flex;
+            width: 100%;
+        }
+
+        .gantt-chart-header-schedule-date {
+            display: flex;
+            border: solid 1px #ccc;
+            align-items: center;
+        }
+
+        .gantt-users-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gantt-user-container {
+            display: flex;
+        }
+
+        .gantt-user-list {
+            display: flex;
+            flex-direction: column;
+            width: 25%;
+            border-right: solid 2px #ddd;
+            background: #eee;
+        }
+
+        .gantt-user-header {
+            display: flex;
+            height: 60px;
+            border-bottom: solid 2px #ddd;
+            border-top: solid 2px #ddd
+        }
+
+        .task {
+            height: 30px;
+        }
+
+        .task-bar-container {
+            position: relative;
+        }
+
+        .task-bar {
+            position: absolute;
+//            background: rgba(255,0,0,0.03);
+//            border: solid 2px #f00;
+            border-radius: 5px;
+            height: 22px;
+            margin-top: 4px;
+        }
+
+        .gantt-user-list-tasks {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gantt-user-list-task {
+            display: flex;
+        }
+
+        .gantt-user-schedule {
+            display: flex;
+            flex-direction: column;
+            width: 75%;
+            background: #fff;
+        }
+
+        .gantt-task-schedule-container {
+            position: relative;
+        }
+
+        .gantt-task-schedule {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+        }
+
+        .gantt-schedule-task-area-cell {
+            display: flex;
+            border: solid 1px #eee;
+        }
+
+        .scroll-fix {
+            overflow-x: auto;
+        }
+
+        .scroll-fix::-webkit-scrollbar {
+            display: none;
+        }
+
+        .center-content {
+            align-items: center;
+            justify-content: center;
+        }
+
+        p {
+            text-align: center;
+            width: 120px;
+            margin: 0;
+        }
 
     </style>
 </gantt>

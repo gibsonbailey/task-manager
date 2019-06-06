@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'taskmanager',
     'rest_framework',
     'drf_yasg',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, "static"),
 ]
+
+SHELL_PLUS='bpython'
