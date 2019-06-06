@@ -27,6 +27,10 @@
                     </div>
                     <div class="gantt-user-schedule">
                         <div class="gantt-user-header center-content">
+                            <div class="range-control">
+                                <div class="range-bar"></div>
+                                <div class="range-bar"></div>
+                            </div>
                             <div class="gantt-task-schedule">
                                 <div each={task, i in person.tasks} style="margin-top: 15px; margin-left: {task.date_offset * 0.1}px; width: {task.date_duration * 0.1}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar">
                                 </div>
@@ -151,14 +155,47 @@
                 scroll_fix.scrollLeft( $(this).scrollLeft())
             })
 
-            var w_container = $('.gantt-task-schedule').width()
+            var w_control_container = $('.gantt-task-schedule').width()
             var w_day_cell = $('.gantt-schedule-task-area-cell').outerWidth()
             var days = dateDiffInDays(minimum_date, maximum_date) + 1
-            var days_on_screen = w_container / w_day_cell
-            console.log(w_container)
-            console.log(w_day_cell)
-            console.log(days)
-            console.log(days_on_screen)
+            var w_schedule_container = w_day_cell * days
+            var days_on_screen = w_control_container / w_day_cell
+            console.log(w_control_container)
+            console.log(w_schedule_container)
+
+            const range_controller = $('.range-control')[0]
+            const range_container = $(range_controller).parent()[0]
+            console.log(range_controller)
+            console.log(range_container)
+            let start_down = false
+            let end_down = false
+            let container_left_position = range_container.offsetLeft
+            let scrollLeft
+            let startX
+
+            range_controller.addEventListener('mousedown', function (e) {
+                start_down = true
+                startX = e.pageX - range_container.offsetLeft
+//                console.log(startX)
+            })
+
+            range_controller.addEventListener('mouseleave', function (e) {
+                start_down = false
+            })
+
+            range_controller.addEventListener('mouseup', function (e) {
+                start_down = false
+            })
+
+            range_controller.addEventListener('mousemove', function (e) {
+                if (!start_down) {
+                    return
+                }
+                let x = e.pageX - range_container.offsetLeft
+                let dx = (x - startX)
+                range_controller.style.marginLeft = dx
+                console.log(dx)
+            })
         })
 
 
@@ -251,6 +288,24 @@
             margin-top: 4px;
         }
 
+        .range-control {
+            display: flex;
+            justify-content: space-between;
+            background: rgb(0, 0, 0, 0.1);
+            height: 60px;
+            width: 50px;
+            margin-left: 0;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+
+        .range-bar {
+            display: flex;
+            height: 100%;
+            background: rgb(80, 80, 80, 0.9);
+            width: 10px;
+        }
+
         .gantt-user-list-tasks {
             display: flex;
             flex-direction: column;
@@ -307,6 +362,5 @@
             min-width: 120px;
             margin: 0;
         }
-
     </style>
 </gantt>
