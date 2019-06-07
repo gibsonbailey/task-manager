@@ -28,8 +28,8 @@
                     <div class="gantt-user-schedule">
                         <div class="gantt-user-header center-content">
                             <div class="range-control">
-                                <div class="range-bar"></div>
-                                <div class="range-bar"></div>
+                                <div class="range-bar" id="start-range-bar"></div>
+                                <div class="range-bar" id="end-range-bar"></div>
                             </div>
                             <div class="gantt-task-schedule">
                                 <div each={task, i in person.tasks} style="margin-top: 15px; margin-left: {task.date_offset * 0.1}px; width: {task.date_duration * 0.1}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar">
@@ -51,6 +51,7 @@
         </div>
     </div>
     <script>
+        print = console.log
 
         var color_palette = [
             {
@@ -158,43 +159,56 @@
             var w_control_container = $('.gantt-task-schedule').width()
             var w_day_cell = $('.gantt-schedule-task-area-cell').outerWidth()
             var days = dateDiffInDays(minimum_date, maximum_date) + 1
+            var w_control_day_cell = w_control_container / days
             var w_schedule_container = w_day_cell * days
             var days_on_screen = w_control_container / w_day_cell
             console.log(w_control_container)
             console.log(w_schedule_container)
 
-            const range_controller = $('.range-control')[0]
-            const range_container = $(range_controller).parent()[0]
-            console.log(range_controller)
-            console.log(range_container)
-            let start_down = false
-            let end_down = false
-            let container_left_position = range_container.offsetLeft
-            let scrollLeft
-            let startX
 
-            range_controller.addEventListener('mousedown', function (e) {
-                start_down = true
-                startX = e.pageX - range_container.offsetLeft
-//                console.log(startX)
+            const container = $('.range-control')[0]
+            const rc_end = $('#end-range-bar')[0]
+            const rc_start = $('#start-range-bar')[0]
+
+            container.style.left = container.parentElement.getBoundingClientRect().left + 20
+            container.style.display = 'flex'
+            container.style.width = 40
+
+            rc_end.addEventListener('mousedown', function (e) {
+                this.down = true
+                this.start_offset = this.getBoundingClientRect().right - e.pageX
             })
 
-            range_controller.addEventListener('mouseleave', function (e) {
-                start_down = false
+            rc_start.addEventListener('mousedown', function (e) {
+                this.down = true
+                this.start_offset = e.pageX - this.getBoundingClientRect().left
             })
 
-            range_controller.addEventListener('mouseup', function (e) {
-                start_down = false
+            document.addEventListener('mouseup', function (e) {
+                rc_start.down = false
+                rc_end.down = false
             })
 
-            range_controller.addEventListener('mousemove', function (e) {
-                if (!start_down) {
-                    return
+            document.addEventListener('mousemove', function (e) {
+                let container_rect = container.getBoundingClientRect()
+                let schedule_rect = container.parentElement.getBoundingClientRect()
+                if (rc_end.down) {
+                    container.style.width = e.pageX + rc_end.start_offset - container_rect.left
+                } else if(rc_start.down) {
+                    let new_left = e.pageX - rc_start.start_offset
+                    if (new_left < schedule_rect.left) {
+                        new_left = schedule_rect.left
+                    }
+
+                    let old_left = parseInt(container.style.left)
+                    let dx = old_left - new_left
+                    let old_width = parseInt(container.style.width)
+
+                    container.style.left = new_left
+                    container.style.width = old_width + dx
                 }
-                let x = e.pageX - range_container.offsetLeft
-                let dx = (x - startX)
-                range_controller.style.marginLeft = dx
-                console.log(dx)
+
+                let control_range = parseInt(container.style.width)
             })
         })
 
@@ -289,14 +303,17 @@
         }
 
         .range-control {
-            display: flex;
+            position: absolute;
+            display: none;
             justify-content: space-between;
             background: rgb(0, 0, 0, 0.1);
             height: 60px;
             width: 50px;
-            margin-left: 0;
+            min-width: 25px;
+            left: 80px;
             overflow: hidden;
             border-radius: 3px;
+            z-index: 5;
         }
 
         .range-bar {

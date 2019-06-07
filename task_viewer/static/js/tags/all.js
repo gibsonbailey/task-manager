@@ -1,4 +1,5 @@
-riot.tag2('gantt', '<div class="gantt-chart-container"> <div class="gantt-chart-content"> <div class="gantt-chart-header"> <div class="gantt-chart-header-title center-content"> <p>Developers</p> </div> <div class="gantt-chart-header-schedule"> <div class="gantt-chart-header-schedule-list scroll-fix"> <div each="{date in opts.layout_dates}" class="gantt-chart-header-schedule-date center-content"> <p>{date.str}</p> </div> </div> </div> </div> <div class="gantt-users-container"> <div each="{person in opts.people}" class="gantt-user-container"> <div class="gantt-user-list"> <div class="gantt-user-header center-content"> <h4>{person.username}</h4> </div> <div class="gantt-user-list-tasks"> <div each="{task in person.tasks}" class="gantt-user-list-task task center-content"> <p>{task.title}</p> </div> </div> </div> <div class="gantt-user-schedule"> <div class="gantt-user-header center-content"> <div class="range-control"> <div class="range-bar"></div> <div class="range-bar"></div> </div> <div class="gantt-task-schedule"> <div each="{task, i in person.tasks}" riot-style="margin-top: 15px; margin-left: {task.date_offset * 0.1}px; width: {task.date_duration * 0.1}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar"> </div> </div> </div> <div class="gantt-task-schedule-container scroll-fix"> <div each="{task, i in person.tasks}" class="gantt-task-schedule"> <div each="{date in opts.layout_dates}" class="gantt-schedule-task-area-cell task center-content"> <p></p> </div> <div riot-style="margin-left: {task.date_offset}px; width: {task.date_duration}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar"> </div> </div> </div> </div> </div> </div> </div> </div>', 'gantt .gantt-chart-container,[data-is="gantt"] .gantt-chart-container{ display: flex; width: 100%; height: 100%; justify-content: center; align-items: center; } gantt .gantt-chart-content,[data-is="gantt"] .gantt-chart-content{ display: flex; flex-direction: column; width: 95%; height: 95%; background: #ddd; border-radius: 8px; } gantt .gantt-chart-header,[data-is="gantt"] .gantt-chart-header{ display: flex; width: 100%; height: 80px; } gantt .gantt-chart-header-title,[data-is="gantt"] .gantt-chart-header-title{ display: flex; width: 25%; align-items: center; } gantt .gantt-chart-header-schedule,[data-is="gantt"] .gantt-chart-header-schedule{ display: flex; width: 75%; } gantt .gantt-chart-header-schedule-list,[data-is="gantt"] .gantt-chart-header-schedule-list{ display: flex; width: 100%; } gantt .gantt-chart-header-schedule-date,[data-is="gantt"] .gantt-chart-header-schedule-date{ display: flex; border: solid 1px #ccc; align-items: center; } gantt .gantt-users-container,[data-is="gantt"] .gantt-users-container{ display: flex; flex-direction: column; } gantt .gantt-user-container,[data-is="gantt"] .gantt-user-container{ display: flex; } gantt .gantt-user-list,[data-is="gantt"] .gantt-user-list{ display: flex; flex-direction: column; width: 25%; border-right: solid 2px #ddd; background: #eee; } gantt .gantt-user-header,[data-is="gantt"] .gantt-user-header{ display: flex; height: 60px; border-bottom: solid 2px #ddd; border-top: solid 2px #ddd } gantt .task,[data-is="gantt"] .task{ height: 30px; } gantt .task-bar-container,[data-is="gantt"] .task-bar-container{ position: relative; } gantt .task-bar,[data-is="gantt"] .task-bar{ position: absolute; border-radius: 5px; height: 22px; margin-top: 4px; } gantt .range-control,[data-is="gantt"] .range-control{ display: flex; justify-content: space-between; background: rgb(0, 0, 0, 0.1); height: 60px; width: 50px; margin-left: 0; overflow: hidden; border-radius: 3px; } gantt .range-bar,[data-is="gantt"] .range-bar{ display: flex; height: 100%; background: rgb(80, 80, 80, 0.9); width: 10px; } gantt .gantt-user-list-tasks,[data-is="gantt"] .gantt-user-list-tasks{ display: flex; flex-direction: column; } gantt .gantt-user-list-task,[data-is="gantt"] .gantt-user-list-task{ display: flex; } gantt .gantt-user-schedule,[data-is="gantt"] .gantt-user-schedule{ display: flex; flex-direction: column; width: 75%; background: #fff; } gantt .gantt-task-schedule-container,[data-is="gantt"] .gantt-task-schedule-container{ position: relative; } gantt .gantt-task-schedule,[data-is="gantt"] .gantt-task-schedule{ display: flex; flex-direction: row; width: 100%; height: 30px; } gantt .gantt-schedule-task-area-cell,[data-is="gantt"] .gantt-schedule-task-area-cell{ display: flex; border: solid 1px #eee; } gantt .scroll-fix,[data-is="gantt"] .scroll-fix{ overflow-x: auto; } gantt .scroll-fix::-webkit-scrollbar,[data-is="gantt"] .scroll-fix::-webkit-scrollbar{ display: none; } gantt .center-content,[data-is="gantt"] .center-content{ align-items: center; justify-content: center; } gantt h4,[data-is="gantt"] h4{ text-align: center; min-width: 120px; margin: 0; } gantt p,[data-is="gantt"] p{ text-align: center; min-width: 120px; margin: 0; }', '', function(opts) {
+riot.tag2('gantt', '<div class="gantt-chart-container"> <div class="gantt-chart-content"> <div class="gantt-chart-header"> <div class="gantt-chart-header-title center-content"> <p>Developers</p> </div> <div class="gantt-chart-header-schedule"> <div class="gantt-chart-header-schedule-list scroll-fix"> <div each="{date in opts.layout_dates}" class="gantt-chart-header-schedule-date center-content"> <p>{date.str}</p> </div> </div> </div> </div> <div class="gantt-users-container"> <div each="{person in opts.people}" class="gantt-user-container"> <div class="gantt-user-list"> <div class="gantt-user-header center-content"> <h4>{person.username}</h4> </div> <div class="gantt-user-list-tasks"> <div each="{task in person.tasks}" class="gantt-user-list-task task center-content"> <p>{task.title}</p> </div> </div> </div> <div class="gantt-user-schedule"> <div class="gantt-user-header center-content"> <div class="range-control"> <div class="range-bar" id="start-range-bar"></div> <div class="range-bar" id="end-range-bar"></div> </div> <div class="gantt-task-schedule"> <div each="{task, i in person.tasks}" riot-style="margin-top: 15px; margin-left: {task.date_offset * 0.1}px; width: {task.date_duration * 0.1}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar"> </div> </div> </div> <div class="gantt-task-schedule-container scroll-fix"> <div each="{task, i in person.tasks}" class="gantt-task-schedule"> <div each="{date in opts.layout_dates}" class="gantt-schedule-task-area-cell task center-content"> <p></p> </div> <div riot-style="margin-left: {task.date_offset}px; width: {task.date_duration}px; background: {opts.color_palette[i % opts.color_palette.length].background}; border: solid 2px {opts.color_palette[i % opts.color_palette.length].border};" class="task-bar"> </div> </div> </div> </div> </div> </div> </div> </div>', 'gantt .gantt-chart-container,[data-is="gantt"] .gantt-chart-container{ display: flex; width: 100%; height: 100%; justify-content: center; align-items: center; } gantt .gantt-chart-content,[data-is="gantt"] .gantt-chart-content{ display: flex; flex-direction: column; width: 95%; height: 95%; background: #ddd; border-radius: 8px; } gantt .gantt-chart-header,[data-is="gantt"] .gantt-chart-header{ display: flex; width: 100%; height: 80px; } gantt .gantt-chart-header-title,[data-is="gantt"] .gantt-chart-header-title{ display: flex; width: 25%; align-items: center; } gantt .gantt-chart-header-schedule,[data-is="gantt"] .gantt-chart-header-schedule{ display: flex; width: 75%; } gantt .gantt-chart-header-schedule-list,[data-is="gantt"] .gantt-chart-header-schedule-list{ display: flex; width: 100%; } gantt .gantt-chart-header-schedule-date,[data-is="gantt"] .gantt-chart-header-schedule-date{ display: flex; border: solid 1px #ccc; align-items: center; } gantt .gantt-users-container,[data-is="gantt"] .gantt-users-container{ display: flex; flex-direction: column; } gantt .gantt-user-container,[data-is="gantt"] .gantt-user-container{ display: flex; } gantt .gantt-user-list,[data-is="gantt"] .gantt-user-list{ display: flex; flex-direction: column; width: 25%; border-right: solid 2px #ddd; background: #eee; } gantt .gantt-user-header,[data-is="gantt"] .gantt-user-header{ display: flex; height: 60px; border-bottom: solid 2px #ddd; border-top: solid 2px #ddd } gantt .task,[data-is="gantt"] .task{ height: 30px; } gantt .task-bar-container,[data-is="gantt"] .task-bar-container{ position: relative; } gantt .task-bar,[data-is="gantt"] .task-bar{ position: absolute; border-radius: 5px; height: 22px; margin-top: 4px; } gantt .range-control,[data-is="gantt"] .range-control{ position: absolute; display: none; justify-content: space-between; background: rgb(0, 0, 0, 0.1); height: 60px; width: 50px; min-width: 25px; left: 80px; overflow: hidden; border-radius: 3px; z-index: 5; } gantt .range-bar,[data-is="gantt"] .range-bar{ display: flex; height: 100%; background: rgb(80, 80, 80, 0.9); width: 10px; } gantt .gantt-user-list-tasks,[data-is="gantt"] .gantt-user-list-tasks{ display: flex; flex-direction: column; } gantt .gantt-user-list-task,[data-is="gantt"] .gantt-user-list-task{ display: flex; } gantt .gantt-user-schedule,[data-is="gantt"] .gantt-user-schedule{ display: flex; flex-direction: column; width: 75%; background: #fff; } gantt .gantt-task-schedule-container,[data-is="gantt"] .gantt-task-schedule-container{ position: relative; } gantt .gantt-task-schedule,[data-is="gantt"] .gantt-task-schedule{ display: flex; flex-direction: row; width: 100%; height: 30px; } gantt .gantt-schedule-task-area-cell,[data-is="gantt"] .gantt-schedule-task-area-cell{ display: flex; border: solid 1px #eee; } gantt .scroll-fix,[data-is="gantt"] .scroll-fix{ overflow-x: auto; } gantt .scroll-fix::-webkit-scrollbar,[data-is="gantt"] .scroll-fix::-webkit-scrollbar{ display: none; } gantt .center-content,[data-is="gantt"] .center-content{ align-items: center; justify-content: center; } gantt h4,[data-is="gantt"] h4{ text-align: center; min-width: 120px; margin: 0; } gantt p,[data-is="gantt"] p{ text-align: center; min-width: 120px; margin: 0; }', '', function(opts) {
+        print = console.log
 
         var color_palette = [
             {
@@ -101,43 +102,55 @@ riot.tag2('gantt', '<div class="gantt-chart-container"> <div class="gantt-chart-
             var w_control_container = $('.gantt-task-schedule').width()
             var w_day_cell = $('.gantt-schedule-task-area-cell').outerWidth()
             var days = dateDiffInDays(minimum_date, maximum_date) + 1
+            var w_control_day_cell = w_control_container / days
             var w_schedule_container = w_day_cell * days
             var days_on_screen = w_control_container / w_day_cell
             console.log(w_control_container)
             console.log(w_schedule_container)
 
-            const range_controller = $('.range-control')[0]
-            const range_container = $(range_controller).parent()[0]
-            console.log(range_controller)
-            console.log(range_container)
-            let start_down = false
-            let end_down = false
-            let container_left_position = range_container.offsetLeft
-            let scrollLeft
-            let startX
+            const container = $('.range-control')[0]
+            const rc_end = $('#end-range-bar')[0]
+            const rc_start = $('#start-range-bar')[0]
 
-            range_controller.addEventListener('mousedown', function (e) {
-                start_down = true
-                startX = e.pageX - range_container.offsetLeft
+            container.style.left = container.parentElement.getBoundingClientRect().left + 20
+            container.style.display = 'flex'
+            container.style.width = 40
 
+            rc_end.addEventListener('mousedown', function (e) {
+                this.down = true
+                this.start_offset = this.getBoundingClientRect().right - e.pageX
             })
 
-            range_controller.addEventListener('mouseleave', function (e) {
-                start_down = false
+            rc_start.addEventListener('mousedown', function (e) {
+                this.down = true
+                this.start_offset = e.pageX - this.getBoundingClientRect().left
             })
 
-            range_controller.addEventListener('mouseup', function (e) {
-                start_down = false
+            document.addEventListener('mouseup', function (e) {
+                rc_start.down = false
+                rc_end.down = false
             })
 
-            range_controller.addEventListener('mousemove', function (e) {
-                if (!start_down) {
-                    return
+            document.addEventListener('mousemove', function (e) {
+                let container_rect = container.getBoundingClientRect()
+                let schedule_rect = container.parentElement.getBoundingClientRect()
+                if (rc_end.down) {
+                    container.style.width = e.pageX + rc_end.start_offset - container_rect.left
+                } else if(rc_start.down) {
+                    let new_left = e.pageX - rc_start.start_offset
+                    if (new_left < schedule_rect.left) {
+                        new_left = schedule_rect.left
+                    }
+
+                    let old_left = parseInt(container.style.left)
+                    let dx = old_left - new_left
+                    let old_width = parseInt(container.style.width)
+
+                    container.style.left = new_left
+                    container.style.width = old_width + dx
                 }
-                let x = e.pageX - range_container.offsetLeft
-                let dx = (x - startX)
-                range_controller.style.marginLeft = dx
-                console.log(dx)
+
+                let control_range = parseInt(container.style.width)
             })
         })
 
